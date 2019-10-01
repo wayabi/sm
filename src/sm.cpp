@@ -11,3 +11,9 @@ void sm::process_event(std::shared_ptr<sm_event> e)
 		}
 	}
 }
+
+void sm::update()
+{
+	state_current_->on_update();
+}
+

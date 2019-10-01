@@ -11,7 +11,7 @@ class sm_event;
 
 class sm {
 public:
-	template<class S1, class E, class S2>
+	template<typename S1, typename E, typename S2>
 	bool add_event(){
 		std::shared_ptr<S1> s1 = get<S1>();
 		/*
@@ -33,7 +33,7 @@ public:
 		*/
 		if(s1 == nullptr || s2 == nullptr) return false;
 		auto f = [=](std::shared_ptr<sm_state> s0, std::shared_ptr<sm_event> se){
-			if(!dynamic_cast<E>(*se)){
+			if(!dynamic_cast<E*>(*se)){
 				return nullptr;
 			}
 			if(s0.get() == s1.get()){
@@ -47,15 +47,15 @@ public:
 
 	void process_event(std::shared_ptr<sm_event> e);
 
-	template<class S>
+	template<typename S>
 	std::shared_ptr<S> get(){
 		for(auto ite = states_.begin();ite != states_.end();++ite){
-			if(dynamic_cast<S>(**ite)){
-				return *ite;
+			if(dynamic_cast<S*>(ite->get())){
+				return std::shared_ptr<S>(dynamic_cast<S*>(ite->get()));
 			}
 		}
 		auto p = std::make_shared<S>();
-		if(dynamic_cast<sm_state>(*p)){
+		if(dynamic_cast<sm_state*>(p.get())){
 			states_.push_back(p);
 			return p;
 		}else{
@@ -63,11 +63,16 @@ public:
 		}
 	}
 
-	template<class S>
+	template<typename S>
 	void set_initial_state()
 	{
+		auto p = get<S>();
+		state_current_ = p;
+		p->on_entry();
 	}
-
+	
+	void update();
+	
 private:
 	std::vector<std::shared_ptr<sm_state>> states_;
 	std::shared_ptr<sm_state> state_current_;

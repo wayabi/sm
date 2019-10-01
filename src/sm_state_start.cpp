@@ -1,18 +1,20 @@
-#include <stdio.h>
+#include <iostream>
 
 #include "sm_state_start.h"
 
+using namespace std;
+
 void sm_state_start::on_entry()
 {
-	printf("on_entry:%s", TAG);
+	cout << "on_entry:" << TAG << endl;
 }
 
 void sm_state_start::on_exit()
 {
-	printf("on_exit:%s", TAG);
+	cout << "on_exit:" << TAG << endl;
 }
 
 void sm_state_start::on_update()
 {
-	printf("on_update:%s", TAG);
+	cout << "on_update:" << TAG << endl;
 }

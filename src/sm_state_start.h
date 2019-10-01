@@ -1,5 +1,5 @@
-#ifndef __U_SM_STATE_INIT__
-#define __U_SM_STATE_INIT__
+#ifndef __U_SM_STATE_START__
+#define __U_SM_STATE_START__
 
 #include "sm_state.h"
 
