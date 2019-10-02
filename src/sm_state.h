@@ -6,9 +6,11 @@
 class sm;
 
 class sm_event {
+public:
+	virtual ~sm_event(){}
 };
 
-class sm_state {
+class sm_state : public std::enable_shared_from_this<sm_state> {
 public:
 	const std::string TAG;
 	virtual void on_entry(){};

@@ -14,32 +14,17 @@ public:
 	template<typename S1, typename E, typename S2>
 	bool add_event(){
 		std::shared_ptr<S1> s1 = get<S1>();
-		/*
-		for(auto ite = states_.begin();ite != states_.end();++ite){
-			if(dynamic_cast<S1>(**ite)){
-				s1 = *ite;
-				break;
-			}
-		}
-		*/
 		std::shared_ptr<S2> s2 = get<S2>();
-		/*
-		for(auto ite = states_.begin();ite != states_.end();++ite){
-			if(dynamic_cast<S2>(**ite)){
-				s2 = *ite;
-				break;
-			}
-		}
-		*/
 		if(s1 == nullptr || s2 == nullptr) return false;
+
 		auto f = [=](std::shared_ptr<sm_state> s0, std::shared_ptr<sm_event> se){
-			if(!dynamic_cast<E*>(*se)){
-				return nullptr;
+			if(!dynamic_cast<E*>(se.get())){
+				return std::shared_ptr<S2>();
 			}
 			if(s0.get() == s1.get()){
 				return s2;
 			}
-			return nullptr;
+			return std::shared_ptr<S2>();
 		};
 		f_transition_.push_back(f);
 		return true;
@@ -51,7 +36,7 @@ public:
 	std::shared_ptr<S> get(){
 		for(auto ite = states_.begin();ite != states_.end();++ite){
 			if(dynamic_cast<S*>(ite->get())){
-				return std::shared_ptr<S>(dynamic_cast<S*>(ite->get()));
+				return std::dynamic_pointer_cast<S>(*ite);
 			}
 		}
 		auto p = std::make_shared<S>();
