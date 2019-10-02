@@ -9,7 +9,7 @@
 class sm_state;
 class sm_event;
 
-class sm {
+class sm : public std::enable_shared_from_this<sm> {
 public:
 	template<typename S1, typename E, typename S2>
 	bool add_event(){
@@ -39,7 +39,7 @@ public:
 				return std::dynamic_pointer_cast<S>(*ite);
 			}
 		}
-		auto p = std::make_shared<S>();
+		auto p = std::make_shared<S>(shared_from_this());
 		if(dynamic_cast<sm_state*>(p.get())){
 			states_.push_back(p);
 			return p;
@@ -53,11 +53,20 @@ public:
 	{
 		auto p = get<S>();
 		state_current_ = p;
-		p->on_entry();
+		//nullptr event for first on_entry().
+		p->on_entry(std::make_shared<sm_event>());
 	}
 	
 	void update();
-	
+	//for inheritance
+	virtual ~sm(){}
+
+	template<typename S>
+	bool current_state_is()
+	{
+		return std::dynamic_pointer_cast<S>(state_current_).get() != nullptr;
+	}
+
 private:
 	std::vector<std::shared_ptr<sm_state>> states_;
 	std::shared_ptr<sm_state> state_current_;

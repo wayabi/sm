@@ -6,8 +6,9 @@
 class sm_state_start : public sm_state {
 public:
 	const std::string TAG = "sm_state_start";
-	void on_entry() override;
-	void on_exit() override;
+	using sm_state::sm_state;
+	void on_entry(std::shared_ptr<sm_event> e) override;
+	void on_exit(std::shared_ptr<sm_event> e) override;
 	void on_update() override;
 };
 

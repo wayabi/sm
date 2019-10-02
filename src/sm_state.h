@@ -10,13 +10,16 @@ public:
 	virtual ~sm_event(){}
 };
 
-class sm_state : public std::enable_shared_from_this<sm_state> {
+class sm_state {
 public:
 	const std::string TAG;
-	virtual void on_entry(){};
-	virtual void on_exit(){};
+	sm_state(std::shared_ptr<sm> p){sm_ = p;}
+	virtual void on_entry(std::shared_ptr<sm_event> e){};
+	virtual void on_exit(std::shared_ptr<sm_event> e){};
 	virtual void on_update(){};
 	virtual ~sm_state(){}
+	virtual bool event_acceptable(std::shared_ptr<sm_event> e){return true;}
+
 protected:
 	std::shared_ptr<sm> sm_;
 
